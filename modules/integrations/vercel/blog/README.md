@@ -1,124 +1,101 @@
 # Liferay Headless Blog - Next.js Sample
-<!-- In LiferayStyle we remove needless words and fillers ... maybe:  "This [Next.js](...) application consumes [Liferay](...) CMS Blog APIs"-->
-This is a [Next.js](https://nextjs.org) made to consume [Liferay](https://www.liferay.com/)'s CMS Blog headless APIs.
 
- ## Prerequisites<!--I wouldn't use it as a section. Maybe just "Prerequisites:"-->
+This [Next.js](https://nextjs.org) template consumes [Liferay's](https://www.liferay.com/)'s CMS Blog headless APIs. For more information, read [Getting Started with Liferay](https://learn.liferay.com/w/dxp/getting-started).
 
-<!-- Unecessary, you can go ahead and list the prerequisites since the section title already desclibes it.
-
-Before starting, ensure you have installed: -->
+ ## Prerequisites
 
 - Git
 - Node.js 22+
 - Liferay Portal 2025.Q4+
 
-## Getting Started
+## Clone the template
 
-### 1. Clone the template
-<!-- lists are very important, so maybe instead of "to clone..." go straight to :
-1. Run ``` bash ....```
-1. Access the created repository ``` bash``` -->
-To clone the `blog` template, run:
+1. Run the following command in your terminal:
 
-```bash
-curl -sL https://raw.githubusercontent.com/liferay/liferay-portal/master/modules/integrations/vercel/clone-template.sh | bash -s -- blog
-```
+    ```bash
+    curl -sL https://raw.githubusercontent.com/liferay/liferay-portal/master/modules/integrations/vercel/clone-template.sh | bash -s -- blog
+    ```
 
-And then go to your newly created repository:
+1. Navigate to the repository directory:
 
-```bash
-cd blog
-```
+    ```bash
+    cd blog
+    ```
 
-### 2. Setup your local Liferay instance
+## Setup your local Liferay instance
 
-<!-- Use a note to explain FFs: 
 !!! important
-    Currently, this feature is behind a beta feature flag (LPD-XXXXX) and also depends on release feature flags (LPS-XXXXXX and LPD-XXXXX). Read [Feature Flags](../security-and-administration/administration/configuring-liferay/feature-flags.md) for more information. -->
-Currently, to run a Liferay DXP with the CMS site enabled, we need to enable the following feature flags:
+    Currently, this feature is behind a beta feature flag (LPD-17564) and also depends on release feature flags (LPD-32050 and LPD-34594). Read [Feature Flags](https://learn.liferay.com/w/dxp/security-and-administration/administration/configuring-liferay/feature-flags) for more information.
 
-- Release FF:
-    - LPD-32050 (Enhancements to Object Entry Localization)
-    - LPD-34594 (Root Object Definitions)
-- Beta FF:
-    - LPD-17564 (CMS)
+1. Log in with your email to the Liferay instance at [http://localhost:8080/](http://localhost:8080/).
 
-<!-- For steps, instead of using semicolons(;), use full stops(.) -->
-<!-- Remove "running" and capsize Liferay: Go to your Liferay instance. -->
-1. Go to your running liferay instance [http://localhost:8080/](http://localhost:8080/);
+1. Open the Global Menu (![Global Menu](../images/icon-applications-menu.png)) and navigate to CMS.
 
-<!-- add "your" - Login with your email and password. -->
-1. Login with email and password;
+    ![Click on the global menu button to have access to CMS.](../images/01.png)
 
-<!-- In documentation, we have to make sure your alt text is a complete sentence. Describe what the image is rather than naming it randomly. -->
-![Image](../images/image-1.png)
+1. Click *Get Started* and follow the on-screen instructions to create a new Space.
 
-<!-- Usage of bold text is very rare, try to use italics when you direct people to click on something. Also the image is not available to me. -->
-Currently, we need to create a CMS site. Follow the image, click on **Get Started** and follow the installation process until the end.
+The new CMS feature uses "Spaces" as the primary container for headless content.
 
-<!-- ## Add the Service Access Policy -->
+## Add the Service Access Policy
 
-Due to security reasons, Liferay doesn't publicly expose some APIs, and that's why we need to add the [Service Access Policy](https://learn.liferay.com/w/dxp/security-and-administration/security/securing-web-services/setting-service-access-policies). To do that:
-<!-- With the addiction of a title section we can remove "To do that:" -->
+Liferay restricts some APIs access by default for security. You must configure a [Service Access Policy](https://learn.liferay.com/w/dxp/security-and-administration/security/securing-web-services/setting-service-access-policies) to allow public access to the necessary endpoints.
 
-1. Go to the [Default Service Access Policies](https://learn.liferay.com/w/dxp/security-and-administration/security/securing-web-services/setting-service-access-policies) page;
+1. Navigate to Control Panel &rarr; Security &rarr; Service Access Policies.
 
-1. Open the existing `OBJECT_DEFAULT` rule;
+1. Click the *OBJECT_DEFAULT* policy.
 
-1. Add a new row and fill it with the following:
-    - **Service Class:** `com.liferay.object.rest.internal.resource.v1_0.ObjectEntryResourceImpl`
-    - **Method Name:** `getScopeScopeKeyPage`
+1. In the Allowed Service Signatures section, add a new row with the following values:
 
- <!-- 1. Go to the [Default Service Access Policies](https://learn.liferay.com/w/dxp/security-and-administration/security/securing-web-services/setting-service-access-policies) page.
-
-1. Open the `OBJECT_DEFAULT` rule.
-
-1. Add a new row and fill it with:
     - Service Class: `com.liferay.object.rest.internal.resource.v1_0.ObjectEntryResourceImpl`
-    - Method Name: `getScopeScopeKeyPage` -->
+    - Method Name: `getScopeScopeKeyPage`
 
-Once that API is now public, we need to make a Guest user (an unauthenticated one) able to see the content provided by it. To do that, follow the steps in [Defining Role Permissions](https://learn.liferay.com/w/dxp/security-and-administration/users-and-permissions/roles-and-permissions/defining-role-permissions) and add the following permissions for the `Guest` role:
+1. Click Save.
 
-<!-- Once the API is public, make a "Guest user" (unauthenticated) able to see the content provided by it. Follow the steps of [Defining Role Permissions](https://learn.liferay.com/w/dxp/security-and-administration/users-and-permissions/roles-and-permissions/defining-role-permissions) and add the permissions: -->
+## Grant Guest Permissions
 
-- Under `Objects > Blog > Blog`, add `VIEW` permission.
+Once the API is exposed via policy, you must ensure unauthenticated users (Guests) can view the content.
 
-### 3. Run your template
+1. Follow the steps in [Defining Role Permissions](https://learn.liferay.com/w/dxp/security-and-administration/users-and-permissions/roles-and-permissions/defining-role-permissions) to access the permissions interface.
 
-<!-- Unecessary. To get your template up and running, first, install the dependencies: -->
+1. Grant the `View` permission to the Guest role.
 
-<!-- 1. Install the dependencies, run ... -->
-```bash
-npm install
-```
-<!-- 1. Define your environment variables:  -->
-And before starting it, define your environment variables.
+## Run the template
 
-1. Copy the `.env.example` file to `.env`
+1. Install the dependencies:
 
-1. Define:
+    ```bash
+    npm install
+    ```
 
-    - `LIFERAY_HOST`: Your Liferay instance URL (`http://localhost:8080` for local development).
-    - `LIFERAY_SPACE_ID`: Your CMS Space ID (aka Group ID, or Scope ID), you can get it in the Space settings.
+1. Configure your environment variables:
 
-1. Feel free to add Blog content for your local testing:
+    ```bash
+    cp .env.example .env
+    ```
 
-Once you're done, run the development server:
+1. Open `.env` and define the following keys:
 
-```bash
-npm run dev
-```
+   - `LIFERAY_HOST`: Your Liferay instance URL (`http://localhost:8080` for local development).
+   - `LIFERAY_SPACE_ID`: Your CMS Space ID (also known as Group ID, or Scope ID).
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+    !!!note
+        You can retrieve your Space ID in the Space settings. See [Configuring Spaces](https://learn.liferay.com/w/dxp/content-management-system/liferay-headless-content-management-system/spaces/configuring-spaces) to learn more.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-<!-- Make a step by step with all pieces of information, don't be afraid to use imperative form.-->
+1. (Optional) Add a sample Blog content to your Space for testing. See [creating content](https://learn.liferay.com/w/dxp/content-management-system/liferay-headless-content-management-system/assets/creating-assets-and-folders).
+
+1. Start the development server:
+
+    ```bash
+    npm run dev
+    ```
+
+1. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+You can now edit `app/page.tsx` to modify the page. The application auto-updates as you edit the file.
 
 ## Learn More
-<!-- In documentation, we use ## Related Topics -->
-
-<!-- Unecessary. To learn more about Liferay's headless APIs, take a look at the following resources: -->
 
 - [Foundations of Liferay Headless APIs](https://learn.liferay.com/l/29393515)
 - [Mastering Consuming Liferay Headless APIs](https://learn.liferay.com/l/29852017)
