@@ -8,7 +8,7 @@ This [Next.js](https://nextjs.org) template consumes [Liferay's](https://www.lif
 - Node.js 22+
 - Liferay Portal 2025.Q4+
 
-## Setup your template
+## Set up your Template
 
 1. Run the following command in your terminal:
 
@@ -87,7 +87,7 @@ Once the API is exposed via policy, you must ensure unauthenticated users (Guest
 
 1. Grant the `View` permission to the Guest role.
 
-## Run the template
+## Run the Template
 
 1. Install the dependencies:
 

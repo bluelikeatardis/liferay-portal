@@ -1,6 +1,6 @@
 # Liferay Headless Blog - Next.js Sample
 
-This [Next.js](https://nextjs.org) template consumes [Liferay's](https://www.liferay.com/)'s CMS Blog headless APIs. For more information, read [Getting Started with Liferay](https://learn.liferay.com/w/dxp/getting-started).
+This [Next.js](https://nextjs.org) template consumes [Liferay's](https://www.liferay.com/) CMS Blog headless APIs. For more information, read [Getting Started with Liferay](https://learn.liferay.com/w/dxp/getting-started).
 
  ## Prerequisites
 
@@ -8,7 +8,7 @@ This [Next.js](https://nextjs.org) template consumes [Liferay's](https://www.lif
 - Node.js 22+
 - Liferay Portal 2025.Q4+
 
-## Clone the template
+## Clone the Template
 
 1. Run the following command in your terminal:
 
@@ -22,7 +22,7 @@ This [Next.js](https://nextjs.org) template consumes [Liferay's](https://www.lif
     cd blog
     ```
 
-## Setup your local Liferay instance
+## Setup your Local Liferay Instance
 
 !!! important
     Currently, this feature is behind a beta feature flag (LPD-17564) and also depends on release feature flags (LPD-32050 and LPD-34594). Read [Feature Flags](https://learn.liferay.com/w/dxp/security-and-administration/administration/configuring-liferay/feature-flags) for more information.
@@ -60,7 +60,7 @@ Once the API is exposed via policy, you must ensure unauthenticated users (Guest
 
 1. Grant the `View` permission to the Guest role.
 
-## Run the template
+## Run the Template
 
 1. Install the dependencies:
 
