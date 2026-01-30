@@ -1,136 +1,128 @@
-# Liferay Headless Content Page - Next.js Sample
+# Liferay Headless Blog - Next.js Sample
 
-This is a [Next.js](https://nextjs.org) made to consume [Liferay](https://www.liferay.com/)'s CMS Content headless APIs.
+This [Next.js](https://nextjs.org) template consumes [Liferay's](https://www.liferay.com/) CMS Blog headless APIs. For more information, read [Getting Started with Liferay](https://learn.liferay.com/w/dxp/getting-started).
 
-## Prerequisites
-
-Before starting, ensure you have installed:
+ ## Prerequisites
 
 - Git
 - Node.js 22+
 - Liferay Portal 2025.Q4+
 
-## Getting Started
+## Setup your template
 
-### 1. Clone the template
+1. Run the following command in your terminal:
 
-To clone the `content-page` template, run:
+    ```bash
+    curl -sL https://raw.githubusercontent.com/liferay/liferay-portal/master/modules/integrations/vercel/clone-template.sh | bash -s -- content-page
+    ```
 
-```bash
-curl -sL https://raw.githubusercontent.com/liferay/liferay-portal/master/modules/integrations/vercel/clone-template.sh | bash -s -- content-page
-```
+1. Navigate to the repository directory:
 
-And then go to your newly created repository:
+    ```bash
+    cd content-page
+    ```
 
-```bash
-cd content-page
-```
+## Set up your local Liferay instance
 
-### 2. Setup your local Liferay instance
+1. Log in with your email to the Liferay instance at [http://localhost:8080/](http://localhost:8080/).
 
-Currently, to run a Liferay DXP with the CMS site enabled, we need to enable the following feature flags:
+## Creating an Event Structure
 
-- Release FF:
-    - LPD-32050 (Enhancements to Object Entry Localization)
-    - LPD-34594 (Root Object Definitions)
-- Beta FF:
-    - LPD-17564 (CMS)
+Liferay provides some predefined content structures, but you can create your own.
 
-1. Go to your running liferay instance [http://localhost:8080/](http://localhost:8080/);
+!!! important
+    Currently, this feature is behind a beta feature flag (LPD-17564) and also depends on release feature flags (LPD-32050 and LPD-34594). Read [Feature Flags](https://learn.liferay.com/w/dxp/security-and-administration/administration/configuring-liferay/feature-flags) for more information.
 
-1. Login with email and password;
+1. Go to the Structures page in Liferay CMS Dashboard and click on *add* (![Add icon](../content-page/images/icon-add.png)) &rarr; *Content*.
 
-![Image](../images/image-1.png)
+   ![Click on Content to create an event structure](./images/01.png)
 
-Liferay provides a few predefined content structures, but you're free to create your own. Let's create an `Event` structure:
+1. Under the General tab, edit the Structure Name field and check the box to make it available for all spaces.
 
-1. Go to the **Structures** page and add a new `Content` structure;
-   <br />![create structure 01](./images/create-structure-01.png)
+1. Fill in these fields:
+    - Title
+    - Content
+    - Summary
+    - Image
+    - Location Map Url
+    - Location Name
+    - Registration Link
 
-1. Edit the structure name and make it available for all spaces:
-   <br />![create structure 02](./images/create-structure-02.png)
+1. Click *Publish*.
 
-1. Edit the `Title` field:
-   <br />![create structure 03](./images/create-structure-03.png)
+## Creating an Event
 
-1. Edit the `Content` field:
-   <br />![create structure 04](./images/create-structure-04.png)
+1. Go to the Contents tab under Assets.
 
-1. Edit the `Summary` field:
-   <br />![create structure 05](./images/create-structure-05.png)
+1. Click *New*.
 
-1. Edit the `Image` field:
-   <br />![create structure 06](./images/create-structure-06.png)
+1. Select the Content Structure.
 
-1. Edit the `Location Map Url` field:
-   <br />![create structure 07](./images/create-structure-07.png)
+      ![Select the content structure to create an event](./images/02.png)
 
-1. Edit the `Location Name` field:
-    <br />![create structure 08](./images/create-structure-08.png)
+1. Choose the Space for the content.
 
-1. Edit the `Registration Link` field:
-    <br />![create structure 09](./images/create-structure-09.png)
+1. Click *Save*
 
-1. Publish it.
+## Add the Service Access Policy
 
-Now you're able to create new `Event`s:
+Liferay restricts some APIs access by default for security. You must configure a [Service Access Policy](https://learn.liferay.com/w/dxp/security-and-administration/security/securing-web-services/setting-service-access-policies) to allow public access to the necessary endpoints.
 
-![create structure 10](./images/create-structure-10.png)
+1. Navigate to Control Panel &rarr; Security &rarr; Service Access Policies.
 
-Save the ID present in the URL and Global Menu:
+1. Click the `OBJECT_DEFAULT` policy.
 
-![create structure 11](./images/create-structure-11.png)
+1. In the Allowed Service Signatures section, add a new row with the following values:
 
-Fill the form and save your content.
+    - Service Class: `com.liferay.object.rest.internal.resource.v1_0.ObjectEntryResourceImpl`
+    - Method Name: `getScopeScopeKeyPage`
 
-Due to security reasons, Liferay doesn't publicly expose some APIs, and that's why we need to add a [Service Access Policy](https://learn.liferay.com/w/dxp/security-and-administration/security/securing-web-services/setting-service-access-policies). To do that:
+1. Click Save.
 
-1. Go to the [Default Service Access Policies](https://learn.liferay.com/w/dxp/security-and-administration/security/securing-web-services/setting-service-access-policies) page;
+## Grant Guest Permissions
 
-1. Open the existing `OBJECT_DEFAULT` rule;
+Once the API is exposed via policy, you must ensure unauthenticated users (Guests) can view the content.
 
-1. Add a new row and fill it with the following:
-    - **Service Class:** `com.liferay.object.rest.internal.resource.v1_0.ObjectEntryRelatedObjectsResourceImpl`
-    - **Method Name:** `getCurrentObjectEntriesObjectRelationshipNamePage`
+1. Follow the steps in [Defining Role Permissions](https://learn.liferay.com/w/dxp/security-and-administration/users-and-permissions/roles-and-permissions/defining-role-permissions) to access the permissions interface.
 
-Once that API is now public, we need to make a Guest user (an unauthenticated one) able to see the content provided by it. To do that, follow the steps in [Defining Role Permissions](https://learn.liferay.com/w/dxp/security-and-administration/users-and-permissions/roles-and-permissions/defining-role-permissions) and add the following permissions for the `Guest` role:
+1. Grant the `View` permission to the Guest role.
 
-- Under `Objects > [ YOUR CUSTOM CONTENT ENTITY ] > [ YOUR CUSTOM CONTENT ENTITY ]`, add `VIEW` permission.
-    <br />![guest permissions](./images/guest-permissions.png)
+## Run the template
 
-### 3. Run your template
+1. Install the dependencies:
 
-To get your template up and running, first, install the dependencies:
+    ```bash
+    npm install
+    ```
 
-```bash
-npm install
-```
+1. Configure your environment variables:
 
-And before starting it, define your environment variables.
+    ```bash
+    cp .env.example .env
+    ```
 
-1. Copy the `.env.example` file to `.env`
+1. Open `.env` and define the following keys:
 
-1. Define:
     - `LIFERAY_LANGUAGES`: The available languages that you can consume to extract data to display (e.g.: `en_US,es_ES,pt_BR`).
-    - `LIFERAY_CONTENT_PATH`: Your content path, including ID
-        - If you're using a custom structure, it will be like `/o/c/[ structure_name ]/[ content_ID ]`;
-            - In our example, that would be: `/o/c/events/35367`
-        - If you're using the existing Basic Web Content, it will be like `/o/cms/basic-documents/[ content_ID ]`.
-        - You can find the `content_ID` in the content details page.
+    - `LIFERAY_CONTENT_PATH`: Your content path, including ID.
+        - If you are using a custom structure, follow this pattern: /o/c/[structure_name]/[content_ID] (e.g., /o/c/events/35367).
 
-Once you're done, run the development server:
+        - If you are using existing Basic Web Content, follow this pattern: /o/cms/basic-documents/[content_ID].
 
-```bash
-npm run dev
-```
+            !!! note
+                You can find the `content_ID` in the content page.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. Start the development server:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+    ```bash
+    npm run dev
+    ```
+
+1. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+You can now edit `app/page.tsx` to modify the page. The application auto-updates as you edit the file.
 
 ## Learn More
-
-To learn more about Liferay's headless APIs, take a look at the following resources:
 
 - [Foundations of Liferay Headless APIs](https://learn.liferay.com/l/29393515)
 - [Mastering Consuming Liferay Headless APIs](https://learn.liferay.com/l/29852017)
